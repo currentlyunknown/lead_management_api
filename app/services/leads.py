@@ -2,21 +2,15 @@ from datetime import datetime
 from typing import List
 
 from fastapi import HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Query, Session
 
 from app.models.models import DBLead
 from app.models.schemas import LeadPayload, LeadResponse, UserResponse
-from app.config import get_settings
-from sqlalchemy.orm import Query
 
 
-settings = get_settings()
-
-key = settings.secret_key
-algorithm = settings.algorithm
-
-
-async def create_lead(payload: LeadPayload, user: UserResponse, db: Session) -> LeadResponse:
+async def create_lead(
+    payload: LeadPayload, user: UserResponse, db: Session
+) -> LeadResponse:
     db_lead: DBLead = DBLead(**payload.dict(), owner_id=user.id)
     db.add(instance=db_lead)
     db.commit()
@@ -39,7 +33,10 @@ async def lead_selector(lead_id: int, user: UserResponse, db: Session) -> DBLead
     )
 
     if db_lead is None:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Lead with id [{lead_id}] does not exist")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Lead with id [{lead_id}] does not exist",
+        )
 
     return db_lead
 

@@ -5,13 +5,8 @@ from sqlalchemy.orm import Session
 
 from app.models.schemas import LeadPayload, LeadResponse, UserResponse
 from app.services.database import get_db
-from app.services.leads import (
-    create_lead,
-    delete_lead,
-    get_lead,
-    get_leads,
-    update_lead,
-)
+from app.services.leads import (create_lead, delete_lead, get_lead, get_leads,
+                                update_lead)
 from app.services.users import get_current_user
 
 router = APIRouter(prefix="/api/leads")

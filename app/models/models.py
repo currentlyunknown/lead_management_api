@@ -19,7 +19,7 @@ class DBUser(Base):
     leads = relationship("DBLead", back_populates="owner")
 
     def verify_password(self, password: str):
-        return hash.bcrypt.verify(password, self.hashed_password)
+        return hash.bcrypt.verify(secret=password, hash=self.hashed_password)
 
 
 class DBLead(Base):

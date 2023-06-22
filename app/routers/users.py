@@ -3,20 +3,15 @@ from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, security, status
 from sqlalchemy.orm import Session
 
-from app.models.schemas import UserPayload, UserResponse
+from app.models.schemas import TokenResponse, UserPayload, UserResponse
 from app.services.database import get_db
-from app.services.users import (
-    authenticate_user,
-    create_token,
-    create_user,
-    get_current_user,
-    get_user_by_email,
-)
+from app.services.users import (authenticate_user, create_token, create_user,
+                                get_current_user, get_user_by_email)
 
 router = APIRouter(prefix="/api/users")
 
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post("", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def api_create_user(
     payload: UserPayload, db: Session = Depends(get_db)
 ) -> Dict[str, str]:
@@ -31,12 +26,14 @@ async def api_create_user(
     return await create_token(db_user=user)
 
 
-@router.post("/token")
+@router.post("/token", response_model=TokenResponse)
 async def api_generate_token(
     form_data: security.OAuth2PasswordRequestForm = Depends(),
     db: Session = Depends(get_db),
 ) -> Dict[str, str]:
-    user = await authenticate_user(email=form_data.username, password=form_data.password, db=db)
+    user = await authenticate_user(
+        email=form_data.username, password=form_data.password, db=db
+    )
 
     if not user:
         raise HTTPException(
@@ -47,5 +44,7 @@ async def api_generate_token(
 
 
 @router.get("/me", response_model=UserResponse)
-async def api_get_user(user: UserResponse = Depends(get_current_user)) -> Dict[str, Any]:
+async def api_get_user(
+    user: UserResponse = Depends(get_current_user),
+) -> Dict[str, Any]:
     return user

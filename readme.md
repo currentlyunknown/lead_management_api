@@ -1,20 +1,13 @@
 # Lead Management API
 
-Make sure Docker is installed.
-- docker -v
+This API allows you to create users and leads. Each user has his own leads, which cannot be accessed by another user.
 
-If not, install it with:
-- pip install docker
-
-To start the app, run:
-- docker-compose build
-- docker-compose up -d
-
-Once running, by default, your app's URL will be:
+1. Make sure Docker is installed. `docker -v`
+2. Build the image with: `docker-compose build`
+3. Start the container with: `docker-compose up -d`
+4. Once container is running, by default, your app's URL will be:
 http://localhost:8008
-
-To test the endpoints, go to:
+5. To see the endpoints, go to:
 http://localhost:8008/docs
-
-To run automatic tests, run:
-- docker-compose exec web poetry run python -m pytest
+6. To run automatic tests, run:
+`docker-compose exec web poetry run python -m pytest`

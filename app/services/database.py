@@ -1,5 +1,6 @@
-from app.models.database import Base, SessionLocal, engine
 from sqlalchemy.orm import Session
+
+from app.models.database import Base, SessionLocal, engine
 
 
 def create_database():
@@ -8,7 +9,5 @@ def create_database():
 
 def get_db() -> None:
     db: Session = SessionLocal()
-    try:
+    with db:
         yield db
-    finally:
-        db.close()

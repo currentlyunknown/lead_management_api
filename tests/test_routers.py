@@ -1,6 +1,6 @@
+import pytest
 from async_asgi_testclient import TestClient
 from fastapi import status
-import pytest
 
 BASE_URL = "/"
 
